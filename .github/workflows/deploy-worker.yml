@@ -1,0 +1,40 @@
+name: Deploy Cloudflare Worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cloudflare-worker/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get Cloudflare Account ID
+        id: get-account
+        run: |
+          response=$(curl -s "https://api.cloudflare.com/client/v4/accounts" \
+            -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
+            -H "Content-Type: application/json")
+          echo "Response: $response"
+          account_id=$(echo "$response" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['result'][0]['id'])")
+          echo "Account ID: $account_id"
+          echo "account_id=$account_id" >> $GITHUB_OUTPUT
+
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ steps.get-account.outputs.account_id }}
+          workingDirectory: ./cloudflare-worker
+          environment: production
+
+      - name: Get Worker URL
+        run: |
+          url=$(curl -s "https://api.cloudflare.com/client/v4/accounts/${{ steps.get-account.outputs.account_id }}/workers/scripts/shangqing-worker" \
+            -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
+            | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('script',{}).get('id','shangqing-worker'))")
+          echo "Worker URL: https://$url.workers.dev"
