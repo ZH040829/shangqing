@@ -3,8 +3,6 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-    paths:
-      - 'web/**'
   workflow_dispatch:
 
 jobs:
@@ -13,11 +11,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Copy web files to root
+        run: |
+          cp -r web/* ./
+          # 不复制敏感文件
+          rm -f config/config.yaml
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './web'
+          path: '.'
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Get deployment URL
+        run: echo "🌐 访问地址: ${{ steps.deployment.outputs.page_url }}"
