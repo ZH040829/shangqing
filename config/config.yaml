@@ -1,0 +1,43 @@
+server:
+  port: 8080
+  mode: debug  # debug / release / test
+
+database:
+  host: 127.0.0.1
+  port: 3306
+  user: root
+  password: root123
+  dbname: shangqing
+  max_open_conns: 100
+  max_idle_conns: 10
+  conn_max_lifetime: 3600
+
+redis:
+  addr: localhost:6379
+  password: ""
+  db: 0
+  pool_size: 100
+
+llm:
+  default: edgefn
+  edgefn:
+    api_key: sk-kQgvcXjX1wrIuY41C6D8A9F0Cf8e4b00B45356967e4d710b
+    base_url: https://api.edgefn.net/v1
+    model: DeepSeek-R1-0528-Qwen3-8B
+  coze:
+    api_key: ""
+    bot_id: ""
+    base_url: https://api.coze.cn
+  openai:
+    api_key: ""
+    base_url: https://api.openai.com/v1
+  proxy:
+    url: http://localhost:8081
+
+jwt:
+  secret: shangqing-ierft-secret-key-2026
+  expire_hours: 720  # 30天
+
+v5:
+  default_level: V2
+  max_level: V5
