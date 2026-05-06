@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  shangqing:
+    build: .
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    environment:
+      - GIN_MODE=release
+    volumes:
+      - ./data:/data
+    networks:
+      - shangqing-network
+
+networks:
+  shangqing-network:
+    driver: bridge

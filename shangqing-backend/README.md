@@ -216,36 +216,6 @@ docker build -t shangqing .
 docker run -p 8080:8080 shangqing
 ```
 
-## 🐟 本地运行 Mirofish
-
-Mirofish 是一个可选的本地服务，可以增强熵清的某些功能。
-
-### 安装 Mirofish
-
-```bash
-# 使用 Docker 运行 Mirofish
-docker pull mirofish:latest
-docker run -d --name mirofish -p 8081:8080 mirofish:latest
-```
-
-### 配置熵清连接 Mirofish
-
-在启动熵清前，设置环境变量：
-
-```bash
-export MIROFISH_URL=http://localhost:8081
-./shangqing
-```
-
-### 验证 Mirofish 运行状态
-
-```bash
-curl http://localhost:8081/health
-# 应返回 {"status": "ok"}
-```
-
----
-
 ## 🤝 贡献
 
 欢迎贡献！请遵循以下步骤：
